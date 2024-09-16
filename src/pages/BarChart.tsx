@@ -12,7 +12,7 @@ const BarChart = () => {
 
   const drawChart = () => {
     const svg = d3
-      .select("body")
+      .select('#bar-chart-container')
       .append("svg")
       .attr("width", 500)
       .attr("height", 500);
@@ -30,7 +30,12 @@ const BarChart = () => {
       .attr("cy", 50);
   };
 
-  return null; // This component doesn't render anything directly in JSX
+  return(
+    <div>
+        <div>BarChart!</div>
+        <div id="bar-chart-container"></div>
+    </div>
+  ); // This component doesn't render anything directly in JSX
 };
 
 export default BarChart;
