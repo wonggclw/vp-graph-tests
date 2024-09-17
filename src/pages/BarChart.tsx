@@ -35,7 +35,7 @@ const BarChart = () => {
         <div>BarChart!</div>
         <div id="bar-chart-container"></div>
     </div>
-  ); // This component doesn't render anything directly in JSX
+  ); 
 };
 
 export default BarChart;
