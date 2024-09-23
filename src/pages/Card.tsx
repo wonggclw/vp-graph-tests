@@ -20,6 +20,10 @@ const Card = () => {
       //attr always comes before style - good practice
       // draw the blank card
       let margin: number = 10;
+      let YName: number = 60;
+      let XName: number = 120;
+      let YDate: number = 80;
+      let XDate: number = 120;
       svg
         .append("rect")
         .attr("x", margin)
@@ -54,24 +58,41 @@ const Card = () => {
       //   .attr("height", 100)
       //   .attr("clip-path", "circle(100px)");
 
-      // Define a circular clipPath container
+    // Define a circular clipPath container
     svg.append("defs")
       .append("clipPath")
       .attr("id", "cropCircle") // Set an ID for reference
       .append("circle")
       .attr("cx", margin + centerOffset)
-        .attr("cy", margin + centerOffset)
-        .attr("r", 40); // Circle with radius 100
+      .attr("cy", margin + centerOffset)
+      .attr("r", 39); // Circle with radius 98 so you can see the pink line
 
-// Append an image inside the circle using clip-path
+    // Append an image inside the circle using clip-path
     svg.append("image")
       .attr("xlink:href", "./src/assets/DuckDucken.jpg") // Replace with your image path
-      .attr("x", 150) // Adjust x to position the image within the circle
-      .attr("y", 150) // Adjust y to position the image within the circle
+      //might want to fix this later so that the image is more centered
+      .attr("x", 10) // Adjust x to position the image within the circle
+      .attr("y", 10) // Adjust y to position the image within the circle
       .attr("width", 100) // Adjust width of the image
       .attr("height", 100) // Adjust height of the image
       .attr("clip-path", "url(#cropCircle)"); // Apply the circle clip-path
 
+    svg.append("text")
+      .attr("x", XName)          // Set the x position of the text
+      .attr("y", YName)           // Set the y position of the text
+      .attr("font-family", "sans-serif")  // Set font family
+      .attr("font-size", "24px")          // Set font size
+      .attr("font-weight", "bold")   
+      .attr("fill", "#d4158a")              // Set text color
+      .text("Duck Ducken"); // not sure how this looks exactly coming from FamilySearch yet... do I need to concat first + last names?
+    
+    svg.append("text")
+      .attr("x", XDate)          // Set the x position of the text
+      .attr("y", YDate)           // Set the y position of the text
+      .attr("font-family", "sans-serif")  // Set font family
+      .attr("font-size", "15px")          // Set font size
+      .attr("fill", "#d4158a")              // Set text color
+      .text("1842 - 1927"); // Definitely will need to concat for this later
     }
 
     return (
