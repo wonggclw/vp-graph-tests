@@ -7,6 +7,7 @@ const Header = () => {
           <NavLink to="/card">Card</NavLink>
           <NavLink to="/barchart">BarChart</NavLink>
           <NavLink to="/tidytree">TidyTree</NavLink>
+          <NavLink to="/ctree">CardTree</NavLink>
         </nav>
     </header>
   )
