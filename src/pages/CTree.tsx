@@ -102,9 +102,35 @@ const CTree = () => {
       .separation((a, b) => ((a.parent === b.parent) ? 1 : 0.5))
       .size([treeHeight, treeWidth])
 
-    const g = svg.append('g')
+    //this wraps the tree in a g element. 
+    // Makes it easier to move to where you want to start and helps with dragging.
+      const g = svg.append('g')
       .attr('transform', `translate(${canvasMargin.left},${canvasMargin.top})`)
 
+    const draggable = (event: d3.D3DragEvent<SVGSVGElement, unknown, unknown>) => {
+      const transform = g.attr("transform");
+  
+      // Check if transform is null or doesn't match the expected pattern
+      const match = transform?.match(/translate\(([^)]+)\)/);
+      if (!match) {
+        // If no match is found, return or apply a default translation
+        g.attr("transform", `translate(${event.dx}, ${event.dy})`);
+        return;
+  }
+
+  // Add drag behavior to the `g` element
+    svg.call(
+      d3.drag<SVGSVGElement, unknown>()
+        .on("drag", draggable)
+    );
+
+
+  // Extract the current x and y values from the matched pattern
+  const [currentX, currentY] = match[1].split(',').map(Number);
+
+  // Update the position based on drag movement
+  g.attr("transform", `translate(${currentX + event.dx}, ${currentY + event.dy})`);
+}
 
     //This function uses the link between nodes, which won't exist in the actual tree. Needs to draw a line between two nodes instead.
     const elbow = (d: d3.HierarchyPointLink<Person>) => {
@@ -155,7 +181,7 @@ const CTree = () => {
       <div>
         <div>Tree with cards!</div>
         <h1>Duck Ducken: Where did I come from?</h1>
-        <div id = "ctree-container"></div>
+        <div id="ctree-container"></div>
       </div>
     );
   };
