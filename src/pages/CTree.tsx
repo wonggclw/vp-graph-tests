@@ -105,11 +105,15 @@ const CTree = () => {
     const g = svg.append('g')
       .attr('transform', `translate(${canvasMargin.left},${canvasMargin.top})`)
 
-    // this creates the elbow shaped connectors to connect the node to the tree
+
+    //This function uses the link between nodes, which won't exist in the actual tree. Needs to draw a line between two nodes instead.
     const elbow = (d: d3.HierarchyPointLink<Person>) => {
-      return `M${d.source.y},${d.source.x}H${d.target.y},V${d.target.x}${d.target.children ? '' : 'h' + canvasMargin.right}`
+      return `M${d.source.y},${d.source.x}
+              H${d.target.y}
+              V${d.target.x}
+              H${d.target.y}`
     }
-    
+
     // eventually will need to load in the json using a promised based system
     
     const nodes = d3.hierarchy<Person>(jsonData, (d) => d.parents)
@@ -123,6 +127,8 @@ const CTree = () => {
       .enter().append('path')
       .attr('class', 'link')
       .attr('d', elbow)
+      .attr("stroke", "black") //These last two lines are super important!! Doesn't work without it.
+      .attr("fill", "none");
   
     const node = g.selectAll('.node')
       .data(treeNodes.descendants())
@@ -145,84 +151,6 @@ const CTree = () => {
         .text(d => `${d.data.born} - ${d.data.died}`)
     }
     
-
-    // //attr always comes before style - good practice
-    // // draw the blank card
-    // let margin: number = 10;
-    // let YName: number = 60;
-    // let XName: number = 120;
-    // let YDate: number = 80;
-    // let XDate: number = 120;
-    // svg
-    // .append("rect")
-    // .attr("x", margin)
-    // .attr("y", margin)
-    // .attr("width", 300)
-    // .attr("height", 100)
-    // .attr("rx", 20)
-    // .attr("ry", 20)
-    // .style("fill", "white")
-    // .style("stroke", "#d4158a")
-    // .style("stroke-width", 4);
-
-    // //add the circle
-    // let centerOffset: number = 50
-    // svg
-    // .append("circle")
-    // .attr("cx", margin + centerOffset)
-    // .attr("cy", margin + centerOffset)
-    // .attr("r", 40)
-    // .style("fill", "none")
-    // .style("stroke", "#d4158a")
-    // .style("stroke-width", 4);
-
-    // // //add the image inside the circle, accounting for stroke size
-    // // svg
-    // //   .append("image")
-    // //   //.attr("xlink:href", "src\assets\DuckDucken.jpg")
-    // //   .attr("xlink:href", "./src/assets/DuckDucken.jpg")
-    // //   .attr("x", margin + centerOffset)
-    // //   .attr("y", margin + centerOffset)
-    // //   .attr("width", 100)
-    // //   .attr("height", 100)
-    // //   .attr("clip-path", "circle(100px)");
-
-    // // Define a circular clipPath container
-    // svg.append("defs")
-    //   .append("clipPath")
-    //   .attr("id", "cropCircle") // Set an ID for reference
-    //   .append("circle")
-    //   .attr("cx", margin + centerOffset)
-    //   .attr("cy", margin + centerOffset)
-    //   .attr("r", 39); // Circle with radius 98 so you can see the pink line
-
-    // // Append an image inside the circle using clip-path
-    // svg.append("image")
-    //   .attr("xlink:href", "./src/assets/DuckDucken.jpg") // Replace with your image path
-    //   //might want to fix this later so that the image is more centered
-    //   .attr("x", 10) // Adjust x to position the image within the circle
-    //   .attr("y", 10) // Adjust y to position the image within the circle
-    //   .attr("width", 100) // Adjust width of the image
-    //   .attr("height", 100) // Adjust height of the image
-    //   .attr("clip-path", "url(#cropCircle)"); // Apply the circle clip-path
-
-    // svg.append("text")
-    //   .attr("x", XName)          // Set the x position of the text
-    //   .attr("y", YName)           // Set the y position of the text
-    //   .attr("font-family", "sans-serif")  // Set font family
-    //   .attr("font-size", "24px")          // Set font size
-    //   .attr("font-weight", "bold")   
-    //   .attr("fill", "#d4158a")              // Set text color
-    //   .text("Duck Ducken"); // not sure how this looks exactly coming from FamilySearch yet... do I need to concat first + last names?
-    
-    // svg.append("text")
-    //   .attr("x", XDate)          // Set the x position of the text
-    //   .attr("y", YDate)           // Set the y position of the text
-    //   .attr("font-family", "sans-serif")  // Set font family
-    //   .attr("font-size", "15px")          // Set font size
-    //   .attr("fill", "#d4158a")              // Set text color
-    //   .text("1842 - 1927"); // Definitely will need to concat for this later
-
     return (
       <div>
         <div>Tree with cards!</div>
