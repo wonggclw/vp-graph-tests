@@ -26,6 +26,7 @@ const MagicCircle = () => {
       .attr("stroke", "black");
 
     // Type-safe drag handler: this also shows how to move the cards in the later tree when the tree expands and contracts
+    // This one works with the circle itself.
     const dragHandler = d3.drag<SVGCircleElement, unknown>()
       .on('start', (event: d3.D3DragEvent<SVGCircleElement, unknown, unknown>) => {
         d3.select(event.sourceEvent.target as SVGCircleElement).attr('stroke', 'red');

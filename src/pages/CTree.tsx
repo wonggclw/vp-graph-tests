@@ -104,33 +104,94 @@ const CTree = () => {
 
     //this wraps the tree in a g element. 
     // Makes it easier to move to where you want to start and helps with dragging.
-      const g = svg.append('g')
+      const mainG = svg.append('g')
       .attr('transform', `translate(${canvasMargin.left},${canvasMargin.top})`)
+      .attr('id','mainG');
 
-    const draggable = (event: d3.D3DragEvent<SVGSVGElement, unknown, unknown>) => {
-      const transform = g.attr("transform");
-  
-      // Check if transform is null or doesn't match the expected pattern
-      const match = transform?.match(/translate\(([^)]+)\)/);
-      if (!match) {
-        // If no match is found, return or apply a default translation
-        g.attr("transform", `translate(${event.dx}, ${event.dy})`);
-        return;
-  }
+      // //TODO: work on this. Still not dragging the tree element around correctly
+      // const dragHandler = d3.drag<SVGGElement, unknown>()
+      //   .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+      //     d3.select(event.subject as SVGGElement);
+      //   })
+      //   .on('drag', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+      //     const target = d3.select(event.subject as SVGGElement);
+      //     const transform = target.attr('transform');
+      //     const match = transform?.match(/translate\(([^,]+),([^,]+)\)/);
+      //     if (match) {
+      //       const [x, y] = match.slice(1).map(Number);
+      //       target.attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
+      //     }
+      //   })
+      //   .on('end', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+      //     //const target = 
+      //     d3.select(event.subject as SVGGElement);
+      //     //target.select('circle').attr('stroke', 'black');
+      //   });
+//THINGS I know work:
+// The drag handler is attatched to the g element
+// alert works
 
-  // Add drag behavior to the `g` element
-    svg.call(
-      d3.drag<SVGSVGElement, unknown>()
-        .on("drag", draggable)
-    );
+      const dragHandler = d3.drag<SVGGElement, unknown>()
+        .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+          // Select the <g> element being dragged
+          d3.select(event.subject as SVGGElement);
+          //alert("dragged!");
+        })
+        .on('drag', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+          //const target = d3.select(event.subject as SVGGElement);
+          const target = d3.select(event.sourceEvent.target);
+          // Get the current transform attribute (if any)
+          let transform = target.attr('transform') || 'translate(0,0)';
+          
+          // Extract the x and y translation from the transform string
+          const match = transform.match(/translate\(([^,]+),([^,]+)\)/);
+          let x = 0, y = 0;
+          
+          if (match) {
+            x = parseFloat(match[1]);
+            y = parseFloat(match[2]);
+          }
+          
+          // Update the transform attribute with the new position
+          target.attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
+        })
+        .on('end', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+          // Final event after dragging ends (you can add custom behavior here)
+          d3.select(event.subject as SVGGElement);
+        });
+    
+      // const dragHandler = d3.drag<SVGGElement, unknown>()
+    //   .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+    //     d3.select(event.sourceEvent.target);
+    //     // .select('circle').attr('stroke', 'red')
+    //   })
+    //   .on('drag', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+        
+    //     // const [x, y] = d3.select(event.sourceEvent.target)
+    //     //   .attr('transform')
+    //     //   .match(/translate\(([^,]+),([^,]+)\)/)
+    //     //   .slice(1)
+    //     //   .map(Number);
 
+    //     // d3.select(event.sourceEvent.target)
+    //     //   .attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
 
-  // Extract the current x and y values from the matched pattern
-  const [currentX, currentY] = match[1].split(',').map(Number);
+    //     const target = d3.select(event.sourceEvent.target as SVGGElement);
+    //     if (!target.empty()) {
+    //       const transform = target.attr('transform');
+    //       const match = transform?.match(/translate\(([^,]+),([^,]+)\)/);
+    //       if (match) {
+    //         const [x, y] = match.slice(1).map(Number);
+    //         target.attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
+    //       }
+    //     }
+    //   })
+    //   .on('end', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
+    //     d3.select(event.sourceEvent.target).select('circle').attr('stroke', 'black');
+    //   }
+    // );
 
-  // Update the position based on drag movement
-  g.attr("transform", `translate(${currentX + event.dx}, ${currentY + event.dy})`);
-}
+    dragHandler(d3.select('#mainG'));
 
     //This function uses the link between nodes, which won't exist in the actual tree. Needs to draw a line between two nodes instead.
     const elbow = (d: d3.HierarchyPointLink<Person>) => {
@@ -148,7 +209,7 @@ const CTree = () => {
     const treeNodes = tree(nodes);
   
     // adds links between nodes
-    const link = g.selectAll('.link')
+    const link = mainG.selectAll('.link')
       .data(treeNodes.links())
       .enter().append('path')
       .attr('class', 'link')
@@ -156,7 +217,8 @@ const CTree = () => {
       .attr("stroke", "black") //These last two lines are super important!! Doesn't work without it.
       .attr("fill", "none");
   
-    const node = g.selectAll('.node')
+    // in the real tree, name the nodes by id number so they are easy to go retreive later
+    const node = mainG.selectAll('.node')
       .data(treeNodes.descendants())
       .enter().append('g')
       .attr('class', 'node')
