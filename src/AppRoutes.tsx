@@ -6,6 +6,7 @@ import BarChart from './pages/BarChart';
 import TidyTree from './pages/TidyTree';
 import CTree from './pages/CTree';
 import MagicCircle from './pages/MagicCircle';
+import StaticTree from './pages/StaticTree';
 
 
 const AppRoutes = () => {
@@ -16,6 +17,7 @@ const AppRoutes = () => {
             <Route path="/tidytree" element={<TidyTree />} />
             <Route path="/ctree" element={<CTree />} />
             <Route path="/mcircle" element={<MagicCircle />} />
+            <Route path="/statictree" element={<StaticTree />} />
         </Routes>
   )
 }
