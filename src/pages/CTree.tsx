@@ -159,38 +159,7 @@ const CTree = () => {
           // Final event after dragging ends (you can add custom behavior here)
           d3.select(event.subject as SVGGElement);
         });
-    
-      // const dragHandler = d3.drag<SVGGElement, unknown>()
-    //   .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-    //     d3.select(event.sourceEvent.target);
-    //     // .select('circle').attr('stroke', 'red')
-    //   })
-    //   .on('drag', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-        
-    //     // const [x, y] = d3.select(event.sourceEvent.target)
-    //     //   .attr('transform')
-    //     //   .match(/translate\(([^,]+),([^,]+)\)/)
-    //     //   .slice(1)
-    //     //   .map(Number);
-
-    //     // d3.select(event.sourceEvent.target)
-    //     //   .attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
-
-    //     const target = d3.select(event.sourceEvent.target as SVGGElement);
-    //     if (!target.empty()) {
-    //       const transform = target.attr('transform');
-    //       const match = transform?.match(/translate\(([^,]+),([^,]+)\)/);
-    //       if (match) {
-    //         const [x, y] = match.slice(1).map(Number);
-    //         target.attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
-    //       }
-    //     }
-    //   })
-    //   .on('end', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-    //     d3.select(event.sourceEvent.target).select('circle').attr('stroke', 'black');
-    //   }
-    // );
-
+    //can do this by const mainG or by id mainG
     dragHandler(d3.select('#mainG'));
 
     //This function uses the link between nodes, which won't exist in the actual tree. Needs to draw a line between two nodes instead.
