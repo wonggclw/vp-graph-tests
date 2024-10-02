@@ -108,29 +108,6 @@ const CTree = () => {
       .attr('transform', `translate(${canvasMargin.left},${canvasMargin.top})`)
       .attr('id','mainG');
 
-      // //TODO: work on this. Still not dragging the tree element around correctly
-      // const dragHandler = d3.drag<SVGGElement, unknown>()
-      //   .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-      //     d3.select(event.subject as SVGGElement);
-      //   })
-      //   .on('drag', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-      //     const target = d3.select(event.subject as SVGGElement);
-      //     const transform = target.attr('transform');
-      //     const match = transform?.match(/translate\(([^,]+),([^,]+)\)/);
-      //     if (match) {
-      //       const [x, y] = match.slice(1).map(Number);
-      //       target.attr('transform', `translate(${x + event.dx}, ${y + event.dy})`);
-      //     }
-      //   })
-      //   .on('end', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
-      //     //const target = 
-      //     d3.select(event.subject as SVGGElement);
-      //     //target.select('circle').attr('stroke', 'black');
-      //   });
-//THINGS I know work:
-// The drag handler is attatched to the g element
-// alert works
-
       const dragHandler = d3.drag<SVGGElement, unknown>()
         .on('start', (event: d3.D3DragEvent<SVGGElement, unknown, unknown>) => {
           // Select the <g> element being dragged
@@ -170,7 +147,7 @@ const CTree = () => {
               H${d.target.y}`
     }
 
-    // eventually will need to load in the json using a promised based system
+    // eventually will need to load in the json
     
     const nodes = d3.hierarchy<Person>(jsonData, (d) => d.parents)
   
