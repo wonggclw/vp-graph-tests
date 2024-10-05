@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 
 const CTree = () => {
+  
     useEffect(() => {
       drawChart();
       //does cleanup so that svg is only on the page when you are on the right page

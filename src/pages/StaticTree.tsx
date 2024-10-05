@@ -60,6 +60,58 @@ const StaticTree = () => {
       .attr("width", canvasWidth)
       .attr("height", canvasHeight);
 
+    //this wraps the tree in a g element. 
+    // Makes it easier to move to where you want to start and helps with dragging.
+    const mainG = svg.append('g')
+    .attr('transform', `translate(${canvasMargin.left},${canvasMargin.top})`)
+    .attr('id','mainG');
+
+    const treemap = d3.tree<Person>().size([treeHeight, treeWidth]);
+    const treeStartNode = d3.hierarchy(root, d => d?.parents);
+    
+    // tofix: this works but isn't very pretty. Get rid of the undefined later?
+    const nodes = treemap(treeStartNode as d3.HierarchyNode<Person>);
+
+    // add the links
+    const elbow = (d: d3.HierarchyPointLink<Person>) => {
+      return `M${d.source.y},${d.source.x}
+              H${d.target.y}
+              V${d.target.x}
+              H${d.target.y}`
+    }
+
+    const link = mainG.selectAll('.link')
+      .data(nodes.links())
+      .enter().append('path')
+      .attr('class', 'link')
+      .attr('d', elbow)
+      .attr("stroke", "black") //These last two lines are super important!! Doesn't work without it.
+      .attr("fill", "none");
+    
+    // add the nodes
+    const node = mainG.selectAll('.node')
+      .data(nodes.descendants())
+      .enter().append('g')
+      .attr('class', 'node')
+      .attr( 'transform', d => `translate(${d.y},${d.x})`)
+  
+      // build the card
+      node.append('text')
+        .attr('class', 'name')
+        .attr('x', 8)
+        .attr('y', -6)
+        .text(d => `${d.data.firstName} ${d.data.lastName}`)
+    
+      node.append('text')
+        .attr('x', 8)
+        .attr('y', 8)
+        .attr('dy', '.71em')
+        .attr('class', 'about lifespan')
+        .text(d => `${d.data.born} - ${d.data.died}`)
+
+    // style the nodes
+
+
   };
 
   const loadData = () => {
@@ -94,6 +146,8 @@ const StaticTree = () => {
             child.parents.push(parent);
         }
     })
+
+    console.log(peopleById);
   }
 
   return(
@@ -107,7 +161,7 @@ const StaticTree = () => {
 
 export default StaticTree;
 
-//The data is being transferred in correctly, code if you want to check:
+//Code if you want to check data transfer, just lists the data out:
 {/* <h1>People List</h1>
         <ul>
             {people.map((person) => (
