@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import fakeData from '../assets/fakeTree.json';
 
+// current problem: the people list and links lists are not being populated with the json data.
+  // making them async didn't solve the problem
 const StaticTree = () => {
   //set up data arrays
   const [peopleList, setPeopleList] = useState<Person[]>([]);
@@ -10,10 +12,17 @@ const StaticTree = () => {
   const[root, setRoot] = useState<Person>();
 
   useEffect(() => {
+    const obnoxiousSetupFunction = async() => {
+      try{
+        await loadData();
+        await formatData();
+        drawChart();
+      } catch(error) {
+        console.error('Error loading tree: ', error);
+      }
+    }
 
-    loadData();
-    formatData();
-    drawChart();
+    obnoxiousSetupFunction();
 
     return () => {
         //this does cleanup so that svg is only on the page when you are on the right page
@@ -114,17 +123,18 @@ const StaticTree = () => {
 
   };
 
-  const loadData = () => {
+  const loadData = async (): Promise<void> =>  {
     const treeData: TreeData = fakeData as TreeData;
 
     if (Array.isArray(treeData.people)) {
-      setPeopleList(treeData.people as Person[]);
+      setPeopleList(treeData.people);
+      console.log(JSON.stringify(treeData.people));
     } else {
         console.error("treeData.people is not an array");
     }  
 
     if (Array.isArray(treeData.links)) {
-      setLinks(treeData.links as Link[]);
+      setLinks(treeData.links);
     } else {
         console.error("treeData.links is not an array");
     }
@@ -142,7 +152,7 @@ const StaticTree = () => {
     })
   }
 
-  const formatData = () => {
+  const formatData = async (): Promise<void> => {
     // Add parents to each node in the map
     links.forEach((link, index) => {
         var childId: number = link.person1;
