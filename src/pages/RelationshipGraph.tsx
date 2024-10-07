@@ -33,7 +33,11 @@ class RelationshipGraph{
     }
 
     getParents(person: Person){
+        return this.parent_map.get(person);
+    }
 
+    getChildren(person: Person){
+        return this.child_map.get(person);
     }
 }
 
@@ -47,11 +51,11 @@ function generateRandomPerson(id: number): Person {
         id,
         firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
         lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-        born: Math.floor(Math.random() * 50) + 1970, // Random birth year between 1970-2020
-        died: Math.random() < 0.5 ? 0 : Math.floor(Math.random() * 50) + 1971, // Random death year
+        born: Math.floor(Math.random() * 50) + 1970, 
+        died: Math.random() < 0.5 ? 0 : Math.floor(Math.random() * 50) + 1971,
         img: `none`,
         gender: Math.random() < 0.5 ? 'M' : 'F',
-        parents: id % 2 === 0 ? [generateRandomPerson(id - 1), generateRandomPerson(id - 2)] : undefined // Assign parents for even IDs
+        parents = ['Jospeh Smith', 'Emma SMith'] // Assign parents for even IDs
     };
 }
 
