@@ -117,8 +117,21 @@ const StaticTree = () => {
   const loadData = () => {
     const treeData: TreeData = fakeData as TreeData;
 
-    setLinks(treeData.links);
-    setPeopleList(treeData.people);
+    if (Array.isArray(treeData.people)) {
+      setPeopleList(treeData.people as Person[]);
+    } else {
+        console.error("treeData.people is not an array");
+    }  
+
+    if (Array.isArray(treeData.links)) {
+      setLinks(treeData.links as Link[]);
+    } else {
+        console.error("treeData.links is not an array");
+    }
+
+    // setLinks(treeData.links);
+    // // this line is not working
+    // setPeopleList(treeData.people);
 
     const rootId: number = 1;
     peopleList.forEach((person, index) => {
