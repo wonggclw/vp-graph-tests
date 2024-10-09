@@ -34,6 +34,77 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+// Creating the family tree
+var grandparent1 = {
+    id: 1,
+    firstName: "John",
+    lastName: "Doe",
+    born: 1940,
+    died: 0,
+    img: "url_to_image_1",
+    gender: "M",
+    parents: []
+};
+var grandparent3 = {
+    id: 3,
+    firstName: "Robert",
+    lastName: "Smith",
+    born: 1942,
+    died: 0,
+    img: "url_to_image_3",
+    gender: "M",
+    parents: []
+};
+var grandparent4 = {
+    id: 4,
+    firstName: "Linda",
+    lastName: "Smith",
+    born: 1946,
+    died: 0,
+    img: "url_to_image_4",
+    gender: "F",
+    parents: []
+};
+// Creating parents
+var parent1 = {
+    id: 5,
+    firstName: "Michael",
+    lastName: "Doe",
+    born: 1970,
+    died: 0,
+    img: "url_to_image_5",
+    gender: "M",
+    parents: [grandparent1]
+};
+var parent2 = {
+    id: 6,
+    firstName: "Jessica",
+    lastName: "Doe",
+    born: 1975,
+    died: 0,
+    img: "url_to_image_6",
+    gender: "F",
+    parents: [grandparent3, grandparent4]
+};
+// Creating the child (root)
+var child = {
+    id: 7,
+    firstName: "Emily",
+    lastName: "Doe",
+    born: 2000,
+    died: 0,
+    img: "url_to_image_7",
+    gender: "F",
+    parents: [parent1, parent2]
+};
+var familyTree = [
+    grandparent1,
+    grandparent3,
+    grandparent4,
+    parent1,
+    parent2,
+    child
+];
 var RelationshipGraph = /** @class */ (function () {
     function RelationshipGraph() {
         this.parent_map = new Map();
@@ -44,26 +115,53 @@ var RelationshipGraph = /** @class */ (function () {
         //takes a person object and adds the person and their relationships to the map
         if (person.parents) {
             this.parent_map.set(person, person.parents);
-            person.parents.forEach(function (folk) {
-                var children = _this.child_map.get(folk);
+            person.parents.forEach(function (parent) {
+                var children = _this.child_map.get(parent);
                 if (children === undefined) {
-                    _this.child_map.set(folk, [person]);
+                    _this.child_map.set(parent, [person]);
                 }
                 else {
                     children.push(person);
-                    _this.child_map.set(folk, children);
+                    _this.child_map.set(parent, children);
                 }
             });
         }
     };
+    RelationshipGraph.prototype.getParentChunk = function (person, generations) {
+        var chunk = [person];
+        var next = 0;
+        var chunkSize = (Math.pow(2, generations)) - 1;
+        while (chunk.length < chunkSize) {
+            var curPerson = chunk[next];
+            var parents = this.parent_map.get(curPerson);
+            if (!parents) {
+                null;
+            }
+            else {
+                parents.forEach(function (parent) {
+                    chunk.push(parent);
+                });
+            }
+            next += 1;
+            if (next > chunk.length - 1) {
+                return chunk;
+            }
+        }
+        return chunk;
+    };
     RelationshipGraph.prototype.getParents = function (person) {
-        return this.parent_map.get(person);
+        var parents = this.parent_map.get(person);
+        if (!parents) {
+            return [];
+        }
+        return parents;
     };
     RelationshipGraph.prototype.getChildren = function (person) {
         return this.child_map.get(person);
     };
     return RelationshipGraph;
 }());
+//function to check whether it is populating correctly
 // Function to generate random persons
 function generateRandomPerson(id) {
     var firstNames = ['John', 'Jane', 'Alex', 'Chris', 'Kate'];
@@ -114,5 +212,20 @@ function testAddingPersons() {
         });
     });
 }
-// Run the test
-testAddingPersons();
+function testGetChunk() {
+    var graph = new RelationshipGraph();
+    familyTree.forEach(function (person) {
+        graph.addPerson(person);
+    });
+    var chunk = graph.getParentChunk(child, 3);
+    console.log(chunk.length);
+    console.log(chunk);
+}
+testGetChunk();
+/**
+ * test values:
+ *
+ * 10000: about 15 ms
+ * 100000: about 150 ms
+ * 1000000: about 1500 ms
+ */
