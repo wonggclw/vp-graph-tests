@@ -10,6 +10,7 @@ const Header = () => {
           <NavLink to="/ctree">CardTree</NavLink>
           <NavLink to="/mcircle">MagicCircle</NavLink>
           <NavLink to="/statictree">StaticTree</NavLink>
+          <NavLink to="/odnt">OldDataNewTree</NavLink>
         </nav>
     </header>
   )
