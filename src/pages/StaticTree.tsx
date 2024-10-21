@@ -6,10 +6,7 @@ import fakeData from '../assets/fakeTree.json';
   // making them async didn't solve the problem
 const StaticTree = () => {
   //set up data arrays
-  const [peopleList, setPeopleList] = useState<object[]>([]);
-  const [peopleById, setPeopleById] = useState<Map<Number, Person>>(new Map());
-  const [links, setLinks] = useState<Link[]>([]);
-  const [root, setRoot] = useState<Person>();
+  const [nextNodePos, setNextNodePos] = useState<Number>(0);
 
 
   useEffect(() => {
@@ -53,6 +50,11 @@ const StaticTree = () => {
     links: Link[];
   }
 
+  // calculate the position of the next node
+  const calcPos = (): number => {
+    
+  };
+
   const drawChart = () => {
     // set up data
     const treeData: TreeData = fakeData as TreeData;
@@ -76,6 +78,8 @@ const StaticTree = () => {
         .data(treeData.people)
         .enter()
         .append("circle")
+        // manipulate location here
+        // right now this is by id, later it will be by index in the array
         .attr("cx", d => d.id * 10)
         .attr("cy", d => d.id * 10)
         .attr("r", 5)
