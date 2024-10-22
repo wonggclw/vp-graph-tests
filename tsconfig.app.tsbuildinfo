@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/approutes.tsx","./src/header.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/pages/barchart.tsx","./src/pages/ctree.tsx","./src/pages/card.tsx","./src/pages/magiccircle.tsx","./src/pages/relationshipgraph.ts","./src/pages/statictree.tsx","./src/pages/tidytree.tsx"],"errors":true,"version":"5.6.2"}
