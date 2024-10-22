@@ -1,7 +1,6 @@
-import  { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import fakeData from '../assets/fakeTree.json';
-import { RelationshipGraph } from './RelationshipGraph';
 
 // current problem: the people list and links lists are not being populated with the json data.
   // making them async didn't solve the problem
@@ -11,13 +10,11 @@ const StaticTree = () => {
   const[peopleById, setPeopleById] = useState<Map<Number, Person>>(new Map());
   const[links, setLinks] = useState<Link[]>([]);
   const[root, setRoot] = useState<Person>();
-  const [relations] = useState(new RelationshipGraph());
 
   useEffect(() => {
     const obnoxiousSetupFunction = async() => {
       try{
         await loadData();
-        await newLoadData();
         await formatData();
         drawChart();
       } catch(error) {
@@ -125,26 +122,6 @@ const StaticTree = () => {
 
 
   };
-
-  const newLoadData = async (): Promise<void> => {
-    const treeData: TreeData = fakeData as TreeData
-
-    if (Array.isArray(treeData.people)) {
-      setPeopleList(treeData.people);
-    } else{
-      console.error("treeData.people is not an array");
-    }
-
-    let firstPerson: Person;
-    peopleList.forEach((person, index) =>{
-      if (index === 0){
-        firstPerson = peopleList[0]
-      }
-      console.log(relations?.addPerson(person));
-    })
-
-    relations.getParentChunk(firstPerson!, 3);
-  }
 
   const loadData = async (): Promise<void> =>  {
     const treeData: TreeData = fakeData as TreeData;
