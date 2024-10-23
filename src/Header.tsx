@@ -7,7 +7,7 @@ const Header = () => {
   }
 
   return (
-    <div className="pt-4 mb-20 border-b sticky top-0 z-50">
+    <div className="pt-4 mb-20 border-b top-0 z-50">
     <nav>
         <div className="max-w-6xl mx-auto px-4 lg:text-2xl">
             <div className="flex justify-between">
@@ -43,6 +43,10 @@ const Header = () => {
                     <a href="/olddnt"
                             className="py-4 px-2 font-semibold transition duration-300">
                                 OldDataNewTree
+                    </a>
+                    <a href="/dc"
+                            className="py-4 px-2 font-semibold transition duration-300">
+                                DynamicCard
                     </a>
                 </div>
             </div>

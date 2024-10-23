@@ -6,6 +6,8 @@ export class Card{
     private _birthYear: string;
     private _deathYear: string;
 
+    private _imgSrc: string;
+
     public xcoord: number;
     public ycoord: number;
 
@@ -36,6 +38,10 @@ export class Card{
 
     public get deathYear(): string {
         return this._deathYear;
+    }
+
+    public get imgSrc(): string {
+        return this._imgSrc;
     }
 
 }
