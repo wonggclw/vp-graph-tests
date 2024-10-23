@@ -6,8 +6,8 @@ export class Card{
     private _birthYear: string;
     private _deathYear: string;
 
-    public _xcoord: number;
-    public _ycoord: number;
+    public xcoord: number;
+    public ycoord: number;
 
     constructor(firstName: string, lastName: string, birthYear: string, deathYear: string, 
                 xcoord?: number, ycoord?: number){
@@ -17,8 +17,8 @@ export class Card{
         this._deathYear = deathYear;
 
         // makes sure these optional parameters are not undefined, but instead initialized to a default value
-        this._xcoord = xcoord !== undefined ? xcoord : 0;
-        this._ycoord = ycoord !== undefined ? ycoord : 0;
+        this.xcoord = xcoord !== undefined ? xcoord : 0;
+        this.ycoord = ycoord !== undefined ? ycoord : 0;
     }
 
     // using get methods here because these fields are read only
