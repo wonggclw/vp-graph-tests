@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 
 interface CardProps{
     width: number;
+    pid: string;
+    gender: string;
     firstName: string;
     lastName: string;
     birthYear: string;
@@ -12,10 +14,11 @@ interface CardProps{
     ycoord?: number;
 }
 
-const CardComp: React.FC<CardProps> = ({width, firstName, lastName, birthYear, deathYear = "Living", imgSrc="none", xcoord=0, ycoord=0}) => {
+const CardComp: React.FC<CardProps> = ({width, pid, gender, firstName, lastName, birthYear, deathYear = "Living", imgSrc="none", xcoord=0, ycoord=0}) => {
     useEffect(() => {
+      // TODO: need to fix this part so I can draw a bunch of cards
       drawChart();
-      drawCard(300);
+      drawCard(width, pid);
       //does cleanup so that svg is only on the page when you are on the right page
       return () =>{
         d3.select("svg").remove();
@@ -23,16 +26,38 @@ const CardComp: React.FC<CardProps> = ({width, firstName, lastName, birthYear, d
     }, []);
 
     // eventually add an id so that each card can be referenced later. Append a group to svg later.
-    function drawCard(cardWidth: number){
+    function drawCard(cardWidth: number, pid: string){
       //attr always comes before style - good practice
       // draw the blank card
       let cardHeight: number = (1/3) * (cardWidth);
       let cornerRound: number = (1/15) * (cardWidth);
       let strokeWidth: number = (1/75) * (cardWidth);
 
-      const svg = d3.select("#mainContain");
+      let cardColor: string = "#d4d4d4";
+      let cardImg: string = "src/assets/virtualPedigreeCard/question-mark-53.png";
 
-      svg
+      if(gender == "F"){
+        cardColor = "#d4158a";
+        cardImg = "src/assets/virtualPedigreeCard/Female_icon.png";
+      }
+      if(gender == "M"){
+        cardColor = "#1873a3"
+        cardImg = "src/assets/virtualPedigreeCard/Male_icon.png";
+      }
+
+      if(imgSrc != "none"){
+        cardImg = imgSrc;
+      }
+
+      const svg = d3.select("#mainContain");
+      const g = svg.append("g")
+        .attr("id", pid)
+        .attr("width", width + strokeWidth)
+        .attr("height", cardHeight + strokeWidth)
+        .attr("x", xcoord)
+        .attr("y", ycoord);
+
+      g
         .append("rect")
         .attr("x", xcoord)
         .attr("y", ycoord)
@@ -41,75 +66,86 @@ const CardComp: React.FC<CardProps> = ({width, firstName, lastName, birthYear, d
         .attr("rx", cornerRound)
         .attr("ry", cornerRound)
         .style("fill", "white")
-        .style("stroke", "#d4158a")
+        .style("stroke", cardColor)
         .style("stroke-width", strokeWidth);
 
 
       
       let circleCenterOffset: number = (1/6) * (cardWidth);
       let circleRadius: number = (2/15) * (cardWidth);
-      svg
+      g
         .append("circle")
         .attr("cx", xcoord + circleCenterOffset)
         .attr("cy", ycoord + circleCenterOffset)
         .attr("r", circleRadius)
         .style("fill", "none")
-        .style("stroke", "#d4158a")
+        .style("stroke", cardColor)
         .style("stroke-width", strokeWidth);
 
+    
     // Define a circular clipPath container
-    svg.append("defs")
+    let clipRad: number = circleRadius - ((1/2) * strokeWidth);
+    
+    g.append("defs")
       .append("clipPath")
       .attr("id", "cropCircle") // Set an ID for reference
       .append("circle")
       .attr("cx", xcoord + circleCenterOffset)
       .attr("cy", ycoord + circleCenterOffset)
-      .attr("r", 39); // Circle with radius 98 so you can see the pink line
+      .attr("r", clipRad); // Circle with radius 98 so you can see the pink line
 
     // Append an image inside the circle using clip-path
-    svg.append("image")
-      .attr("xlink:href", "./src/assets/DuckDucken.jpg") // Replace with your image path
-      //might want to fix this later so that the image is more centered
-      .attr("x", 10) // Adjust x to position the image within the circle
-      .attr("y", 10) // Adjust y to position the image within the circle
-      .attr("width", 100) // Adjust width of the image
-      .attr("height", 100) // Adjust height of the image
+    let imgContainWidth: number = (1/3) * cardWidth;
+    let imgContainHeight: number = imgContainWidth;
+
+    g.append("image")
+      .attr("xlink:href", cardImg) // Replace with your image path
+      .attr("x", xcoord) // Adjust x to position the image within the circle
+      .attr("y", ycoord) // Adjust y to position the image within the circle
+      .attr("width", imgContainWidth) // Adjust width of the image
+      .attr("height", imgContainHeight) // Adjust height of the image
+      .attr("preserveAspectRatio", "xMidYMid slice")// makes it so the image is fixed to its normal aspect ratio
       .attr("clip-path", "url(#cropCircle)"); // Apply the circle clip-path
 
-    let textX: number = (2/5) * (cardWidth);
-    //TODO: make these dynamic
-    let YName: number = 60;
-    let YDate: number = 80;
+    let textX: number = (2/5) * (cardWidth) + xcoord;
+    let YName: number = (1/6) * cardWidth + ycoord;
+    let YDate: number = (7/30) * cardWidth + ycoord;
 
-    svg.append("text")
+    let nameTextSize: number = (2/25) * cardWidth;
+    let dateTextSize: number = (1/20) * cardWidth;
+
+    g.append("text")
       .attr("x", textX)          // Set the x position of the text
       .attr("y", YName)           // Set the y position of the text
       .attr("font-family", "sans-serif")  // Set font family
-      .attr("font-size", "24px")          // Set font size
+      .attr("font-size", nameTextSize)          // Set font size
       .attr("font-weight", "bold")   
-      .attr("fill", "#d4158a")              // Set text color
-      .text("Duck Ducken"); // not sure how this looks exactly coming from FamilySearch yet... do I need to concat first + last names?
+      .attr("fill", cardColor)              // Set text color
+      //NOTE: this will not work for cultures where the name is in the other order
+      .text(firstName + " " + lastName); // not sure how this looks exactly coming from FamilySearch yet... do I need to concat first + last names?
     
-    svg.append("text")
+    g.append("text")
       .attr("x", textX)          // Set the x position of the text
       .attr("y", YDate)           // Set the y position of the text
       .attr("font-family", "sans-serif")  // Set font family
-      .attr("font-size", "15px")          // Set font size
-      .attr("fill", "#d4158a")              // Set text color
-      .text("1842 - 1927"); // Definitely will need to concat for this later
+      .attr("font-size", dateTextSize)          // Set font size
+      .attr("fill", cardColor)              // Set text color
+      .text(birthYear + " - " + deathYear); // Definitely will need to concat for this later
     }
 
     const drawChart = () => {
+      let cardHeight: number = (1/3) * (width);
+      let strokeWidth: number = (1/75) * (width);
       d3
         .select("#card-test-container")
         .append("svg")
         .attr("id", "mainContain")
-        .attr("width", 500)
-        .attr("height", 500);
+        .attr("width", width + strokeWidth + xcoord)
+        .attr("height", cardHeight + strokeWidth + ycoord);
     }
 
     return (
-        <div id = "card-test-container" className="border-4 border-sky-300"></div>
+        <div id = "card-test-container" className="w-full h-full border-4 border-sky-300"></div>
     );
   };
   
