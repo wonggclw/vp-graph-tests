@@ -9,6 +9,7 @@ import MagicCircle from './pages/MagicCircle';
 import StaticTree from './pages/StaticTree';
 import OldDataNewTree from './pages/oldDataNewTree';
 import DynamicCard from './pages/DynamicCard';
+import VersionOne from './pages/VersionOne';
 
 
 const AppRoutes = () => {
@@ -22,6 +23,7 @@ const AppRoutes = () => {
             <Route path="/statictree" element={<StaticTree />} />
             <Route path="/odnt" element={<OldDataNewTree />} />
             <Route path="/dc" element={<DynamicCard />} />
+            <Route path = "/vone" element={<VersionOne />} />
         </Routes>
   )
 }

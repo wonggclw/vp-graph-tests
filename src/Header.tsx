@@ -12,7 +12,7 @@ const Header = () => {
         <div className="max-w-6xl mx-auto px-4 lg:text-2xl">
             <div className="flex justify-between">
                 <div className="flex items-center space-x-1">
-                    <a href="/"
+                    {/* <a href="/"
                             className="py-4 px-2 font-semibold transition duration-300">
                                 Home
                     </a>
@@ -43,10 +43,14 @@ const Header = () => {
                     <a href="/olddnt"
                             className="py-4 px-2 font-semibold transition duration-300">
                                 OldDataNewTree
-                    </a>
+                    </a> */}
                     <a href="/dc"
                             className="py-4 px-2 font-semibold transition duration-300">
                                 DynamicCard
+                    </a>
+                    <a href="/vone"
+                            className="py-4 px-2 font-semibold transition duration-300">
+                                VersionOne
                     </a>
                 </div>
             </div>
