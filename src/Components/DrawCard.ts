@@ -28,7 +28,6 @@ function drawMainCard(
       .style("position", "absolute")
       .attr("x", xcoord)
       .attr("y", ycoord);
-    console.log(pid);
 
     let cornerRound: number = (1/15) * (width);
 
