@@ -28,6 +28,7 @@ function drawMainCard(
       .style("position", "absolute")
       .attr("x", xcoord)
       .attr("y", ycoord);
+    console.log(pid);
 
     let cornerRound: number = (1/15) * (width);
 
@@ -47,7 +48,7 @@ function drawMainCard(
       cardImg = imgSrc;
     }
 
-    const svg = d3.select("#" + pid);
+    const svg = d3.select(`#${pid}`);
     const g = svg.append("g")
       .attr("id", pid)
       .attr("width", width + strokeWidth)
@@ -86,7 +87,7 @@ function drawMainCard(
   
   g.append("defs")
     .append("clipPath")
-    .attr("id", "cropCircle") // Set an ID for reference
+    .attr("id", `cropCircle${pid}`) // Set an ID for reference
     .append("circle")
     .attr("cx", xcoord + circleCenterOffset)
     .attr("cy", ycoord + circleCenterOffset)
@@ -103,7 +104,10 @@ function drawMainCard(
     .attr("width", imgContainWidth) // Adjust width of the image
     .attr("height", imgContainHeight) // Adjust height of the image
     .attr("preserveAspectRatio", "xMidYMid slice")// makes it so the image is fixed to its normal aspect ratio
-    .attr("clip-path", "url(#cropCircle)"); // Apply the circle clip-path
+    .attr("clip-path", `url(#cropCircle${pid})`); // Apply the circle clip-path
+
+    console.log("img, ", cardImg)
+
 
   let textX: number = (2/5) * (width) + xcoord;
   let YName: number = (1/6) * width + ycoord;
